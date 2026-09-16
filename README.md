@@ -19,3 +19,12 @@ Diag:   Epoch 500  loss 0.6893  correct 50/50
 Split:  Epoch 500  loss 2.5240  correct 50/50
 Xor:    Epoch 500  loss 2.7498  correct 50/50
 ```
+
+## Task 2.5
+
+```text
+Simple: Epoch 500  loss 2.2712  correct 49/50  time 0.0215 s/epoch
+Diag:   Epoch 500  loss 0.4960  correct 50/50  time 0.0452 s/epoch
+Split:  Epoch 500  loss 0.3224  correct 50/50  time 0.1746 s/epoch
+Xor:    Epoch 500  loss 5.8454  correct 47/50  time 0.1744 s/epoch
+```
