@@ -162,7 +162,10 @@ class TensorData:
         assert len(self._storage) == self.size
 
     def to_cuda_(self) -> None:  # pragma: no cover
-        if not numba.cuda.is_cuda_array(self._storage):
+        is_cuda = hasattr(self._storage, "copy_to_host")
+        if hasattr(numba.cuda, "is_cuda_array"):
+            is_cuda = numba.cuda.is_cuda_array(self._storage)
+        if not is_cuda:
             self._storage = numba.cuda.to_device(self._storage)
 
     def is_contiguous(self) -> bool:

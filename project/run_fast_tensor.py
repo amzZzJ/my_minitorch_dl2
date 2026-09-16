@@ -1,4 +1,5 @@
 import random
+import time
 
 import numba
 
@@ -72,6 +73,7 @@ class FastTrain:
         losses = []
 
         for epoch in range(max_epochs):
+            start = time.perf_counter()
             total_loss = 0.0
             c = list(zip(data.X, data.y))
             random.shuffle(c)
@@ -95,13 +97,14 @@ class FastTrain:
 
             losses.append(total_loss)
             # Logging
-            if epoch % 10 == 0 or epoch == max_epochs:
+            if epoch % 10 == 0 or epoch == max_epochs - 1:
                 X = minitorch.tensor(data.X, backend=self.backend)
                 y = minitorch.tensor(data.y, backend=self.backend)
                 out = self.model.forward(X).view(y.shape[0])
                 y2 = minitorch.tensor(data.y)
                 correct = int(((out.detach() > 0.5) == y2).sum()[0])
                 log_fn(epoch, total_loss, correct, losses)
+                print("Time per epoch", time.perf_counter() - start)
 
 
 if __name__ == "__main__":
@@ -119,12 +122,10 @@ if __name__ == "__main__":
 
     PTS = args.PTS
 
-    if args.DATASET == "xor":
-        data = minitorch.datasets["Xor"](PTS)
-    elif args.DATASET == "simple":
-        data = minitorch.datasets["Simple"].simple(PTS)
-    elif args.DATASET == "split":
-        data = minitorch.datasets["Split"](PTS)
+    dataset_name = args.DATASET.capitalize()
+    if dataset_name not in ("Simple", "Diag", "Split", "Xor"):
+        raise ValueError("dataset must be simple, diag, split, or xor")
+    data = minitorch.datasets[dataset_name](PTS)
 
     HIDDEN = int(args.HIDDEN)
     RATE = args.RATE
